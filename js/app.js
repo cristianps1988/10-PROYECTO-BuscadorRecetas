@@ -115,6 +115,21 @@ function iniciarApp(){
 
         modalBody.appendChild(listGroup);
 
+        // botones de cerrar y favorito
+        const modalFooter = document.querySelector('.modal-footer');
+        limpiarHtml(modalFooter);
+
+        const btnFavorito = document.createElement('button');
+        btnFavorito.classList.add('btn', 'btn-danger', 'col');
+        btnFavorito.textContent = 'Agregar a favoritos';
+        modalFooter.appendChild(btnFavorito);
+
+        const btnCerrarModal = document.createElement('button');
+        btnCerrarModal.classList.add('btn', 'btn-secondary', 'col');
+        btnCerrarModal.textContent = 'Cerrar';
+        btnCerrarModal.onclick = () => modal.hide();
+        modalFooter.appendChild(btnCerrarModal);
+
         modal.show();
     }
 
