@@ -121,8 +121,27 @@ function iniciarApp(){
 
         const btnFavorito = document.createElement('button');
         btnFavorito.classList.add('btn', 'btn-danger', 'col');
-        btnFavorito.textContent = 'Agregar a favoritos';
+        btnFavorito.textContent = existeStorage(idMeal) ? 'Eliminar favorito' : 'Agregar Favorito';
         modalFooter.appendChild(btnFavorito);
+
+        // local storage
+        btnFavorito.onclick = () => {
+            if(existeStorage(idMeal)){
+                eliminarFavorito(idMeal)
+                btnFavorito.textContent = 'Guardar Favorito'
+                mostrarToast('Eliminado correctamente')
+                modal.hide();
+                return
+            }
+
+            agregarFavorito({
+            id: idMeal,
+            title: strMeal,
+            img: strMealThumb
+        });
+        btnFavorito.textContent = 'Eliminar Favorito';
+        mostrarToast('Agregado correctamente');
+    }
 
         const btnCerrarModal = document.createElement('button');
         btnCerrarModal.classList.add('btn', 'btn-secondary', 'col');
@@ -131,6 +150,30 @@ function iniciarApp(){
         modalFooter.appendChild(btnCerrarModal);
 
         modal.show();
+    }
+
+    function mostrarToast(mensaje){
+        const toastDiv = document.querySelector('#toast');
+        const toastBody = document.querySelector('.toast-body');
+        const toast = new bootstrap.Toast(toastDiv);
+        toastBody.textContent = mensaje;
+        toast.show()
+    }
+
+    function existeStorage(id){
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? [];
+        return favoritos.some(favorito => favorito.id === id);
+    }
+
+    function agregarFavorito(receta){
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? [];
+        localStorage.setItem('favoritos', JSON.stringify([...favoritos, receta]));
+    }
+
+    function eliminarFavorito(id){
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? [];
+        const nuevosFavoritos = favoritos.filter(favorito => favorito.id !== id);
+        localStorage.setItem('favoritos', JSON.stringify([...nuevosFavoritos]));
     }
 
     function limpiarHtml(selector){
